@@ -5,7 +5,7 @@ At this time, there are only a few functions from the client. More will be added
 ### Example usage:
 create a client:
 ```
-herpc := hiveengineclient.NewHiveEngineRpc("http://MyHiveEngineApi")
+herpc := hiveenginego.NewHiveEngineRpc("http://MyHiveEngineApi")
 ```
 
 Query latest block info:
