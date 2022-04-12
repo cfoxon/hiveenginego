@@ -107,7 +107,7 @@ func (h HiveEngineRpcNode) GetAllFungibleTokens() ([]HiveEngineFungibleToken, er
 		if len(h.Endpoints.Contracts) == 0 {
 			h.Endpoints.Contracts = "/contracts"
 		}
-		endpoint := h.RpcNode.address + h.Endpoints.Contracts
+		endpoint := h.Endpoints.Contracts
 		ress, err := h.rpcExecBatch(endpoint, queries)
 		if err != nil {
 			return nil, err
