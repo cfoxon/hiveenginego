@@ -62,9 +62,10 @@ func (h HiveEngineRpcNode) getFungibleTokenCount() (int, error) {
 		h.Endpoints.Contracts = "/contracts"
 	}
 	endpoint := h.Endpoints.Contracts
+	qParamsQ := ContractQueryParamsQuery{}
 	qParamsIndex := []ContractQueryParamsIndex{}
 	qParamsIndex = append(qParamsIndex, ContractQueryParamsIndex{Index: "_id", Descending: true})
-	qParams := ContractQueryParams{Contract: "tokens", Table: "tokens", Limit: 1, Offset: 0, Index: qParamsIndex}
+	qParams := ContractQueryParams{Contract: "tokens", Table: "tokens", Query: qParamsQ, Limit: 1, Offset: 0, Index: qParamsIndex}
 	query := herpcQuery{method: "find", params: qParams}
 
 	res, err := h.rpcExec(endpoint, query)
@@ -91,12 +92,13 @@ func (h HiveEngineRpcNode) GetAllFungibleTokens() ([]HiveEngineFungibleToken, er
 	offsetsNeeded := totalTokens / 1000
 
 	qParamsIndex := []ContractQueryParamsIndex{}
+	qParamsQ := ContractQueryParamsQuery{}
 
 	var queries []herpcQuery
 
 	for i := 0; i <= offsetsNeeded; i++ {
 		offset := i * 1000
-		qParams := ContractQueryParams{Contract: "tokens", Table: "tokens", Limit: 1000, Offset: offset, Index: qParamsIndex}
+		qParams := ContractQueryParams{Contract: "tokens", Table: "tokens", Query: qParamsQ, Limit: 1000, Offset: offset, Index: qParamsIndex}
 		query := herpcQuery{method: "find", params: qParams}
 		queries = append(queries, query)
 	}
