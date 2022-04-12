@@ -64,7 +64,7 @@ func (h HiveEngineRpcNode) getFungibleTokenCount() (int, error) {
 	endpoint := h.Endpoints.Contracts
 	qParamsIndex := []ContractQueryParamsIndex{}
 	qParamsIndex = append(qParamsIndex, ContractQueryParamsIndex{Index: "_id", Descending: true})
-	qParams := ContractQueryParams{Contract: "tokens", Table: "tokens", Query: "", Limit: 1, Offset: 0, Index: qParamsIndex}
+	qParams := ContractQueryParams{Contract: "tokens", Table: "tokens", Limit: 1, Offset: 0, Index: qParamsIndex}
 	query := herpcQuery{method: "find", params: qParams}
 
 	res, err := h.rpcExec(endpoint, query)
