@@ -107,7 +107,8 @@ func (h HiveEngineRpcNode) GetSymbolAllNft(nftSymbol string) ([]EngineNft, error
 	var queries []herpcQuery
 	for i := 0; i <= offsetsNeeded; i++ {
 		offset := i * 1000
-		qParams := ContractQueryParams{Contract: "nft", Table: nftSymbolUpper + "instances", Query: struct{}{}, Limit: 1000, Offset: offset, Index: qParamsIndex}
+		queryFilter := QueryIDRange{QueryIntRange{offset, offset + 999}}
+		qParams := ContractQueryParams{Contract: "nft", Table: nftSymbolUpper + "instances", Query: queryFilter, Limit: 1000, Offset: 0, Index: qParamsIndex}
 		query := herpcQuery{method: "find", params: qParams}
 		queries = append(queries, query)
 	}
