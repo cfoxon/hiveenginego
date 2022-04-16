@@ -16,6 +16,14 @@ type EngineNft struct {
 	PreviousOwnedBy string          `json:"previousOwnedBy"`
 }
 
+type NftMarketOffer struct {
+	EngineNft
+	Price       string          `json:"price"`
+	PriceSymbol string          `json:"priceSymbol"`
+	Account     string          `json:"account"`
+	Grouping    json.RawMessage `json:"grouping"`
+}
+
 type NftTransferPayload struct {
 	Nfts []NftsForNftTransfer `json:"nfts"`
 	To   string               `json:"to"`
@@ -169,4 +177,64 @@ func (h HiveEngineRpcNode) GetSymbolAllNftFast(nftSymbol string) ([][]byte, erro
 	}
 
 	return ress, nil
+}
+func (h HiveEngineRpcNode) GetSymbolAllNftMarket(nftSymbol string, chunkSize int) ([]NftMarketOffer, error) {
+	var allNftMarketOffers []NftMarketOffer
+	var offset int
+	marketNftFetched := chunkSize + 1000
+	for marketNftFetched == chunkSize+1000 {
+		nftOffersThisRound, err := h.getSymbolNftMarketN(nftSymbol, chunkSize, offset)
+		if err != nil {
+			return nil, err
+		}
+		allNftMarketOffers = append(allNftMarketOffers, nftOffersThisRound...)
+		marketNftFetched = len(nftOffersThisRound)
+		offset = offset + chunkSize + 1000
+	}
+	return allNftMarketOffers, nil
+}
+
+//chunkSize is the number to be grabbed and tested to see if another round is needed
+func (h HiveEngineRpcNode) getSymbolNftMarketN(nftSymbol string, chunkSize int, startingOffset int) ([]NftMarketOffer, error) {
+	if len(h.Endpoints.Contracts) == 0 {
+		h.Endpoints.Contracts = "/contracts"
+	}
+	if h.RpcNode.MaxConn == 0 {
+		h.RpcNode.MaxConn = 1
+	}
+	if h.RpcNode.MaxBatch == 0 {
+		h.RpcNode.MaxBatch = 2
+	}
+
+	nftSymbolUpper := strings.ToUpper(nftSymbol)
+
+	offsetsNeeded := chunkSize / 1000
+
+	qParamsIndex := []ContractQueryParamsIndex{}
+
+	var queries []herpcQuery
+	for i := 0; i <= offsetsNeeded; i++ {
+		offset := (i * 1000) + startingOffset
+		qParams := ContractQueryParams{Contract: "nftmarket", Table: nftSymbolUpper + "sellBook", Query: struct{}{}, Limit: 1000, Offset: offset, Index: qParamsIndex}
+		query := herpcQuery{method: "find", params: qParams}
+		queries = append(queries, query)
+	}
+
+	endpoint := h.Endpoints.Contracts
+
+	ress, err := h.rpcExecBatch(endpoint, queries)
+	if err != nil {
+		return nil, err
+	}
+
+	var nftOffers []NftMarketOffer
+	for _, res := range ress {
+		thisresult := []NftMarketOffer{}
+		if err := json.Unmarshal(res, &thisresult); err != nil { // Parse []byte to the go struct pointer
+			return nil, err
+		}
+		nftOffers = append(nftOffers, thisresult...)
+	}
+
+	return nftOffers, nil
 }
