@@ -2,6 +2,7 @@ package hiveenginego
 
 import (
 	"encoding/json"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -181,6 +182,7 @@ func (h HiveEngineRpcNode) GetSymbolAllNftFast(nftSymbol string) ([][]byte, erro
 func (h HiveEngineRpcNode) GetSymbolAllNftMarket(nftSymbol string, chunkSize int) ([]NftMarketOffer, error) {
 	var allNftMarketOffers []NftMarketOffer
 	var offset int
+	chunkSize = int(math.Ceil(float64(chunkSize)/1000) * 1000)
 	marketNftFetched := chunkSize + 1000
 	for marketNftFetched == chunkSize+1000 {
 		nftOffersThisRound, err := h.getSymbolNftMarketN(nftSymbol, chunkSize, offset)
