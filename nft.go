@@ -17,7 +17,7 @@ type EngineNft struct {
 }
 
 type NftMarketOffer struct {
-	EngineNft
+	NftId       string          `json:"nftId"`
 	Price       string          `json:"price"`
 	PriceSymbol string          `json:"priceSymbol"`
 	Account     string          `json:"account"`
@@ -230,6 +230,7 @@ func (h HiveEngineRpcNode) getSymbolNftMarketN(nftSymbol string, chunkSize int, 
 	var nftOffers []NftMarketOffer
 	for _, res := range ress {
 		thisresult := []NftMarketOffer{}
+		//fmt.Println(string(res))
 		if err := json.Unmarshal(res, &thisresult); err != nil { // Parse []byte to the go struct pointer
 			return nil, err
 		}
