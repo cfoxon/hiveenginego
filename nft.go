@@ -2,7 +2,6 @@ package hiveenginego
 
 import (
 	"encoding/json"
-	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -238,7 +237,6 @@ func (h HiveEngineRpcNode) getSymbolNftMarketN(nftSymbol string, chunkSize int, 
 	var nftOffers []NftMarketOffer
 	for _, res := range ress {
 		thisresult := []NftMarketOffer{}
-		fmt.Println(string(res))
 		if err := json.Unmarshal(res, &thisresult); err != nil { // Parse []byte to the go struct pointer
 			return nil, err
 		}
