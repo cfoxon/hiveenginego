@@ -4,6 +4,14 @@ import (
 	"encoding/json"
 )
 
+type EngineStatus struct {
+	LastBlockNumber             int    `json:"lastBlockNumber"`
+	LastBlockRefHiveBlockNumber int    `json:"lastBlockRefHiveBlockNumber"`
+	LastParsedHiveBlockNumber   int    `json:"lastParsedHiveBlockNumber"`
+	SSCnodeVersion              string `json:"SSCnodeVersion"`
+	ChainId                     string `json:"chainId"`
+}
+
 type EngineBlock struct {
 	BlockNumber         int             `json:"blockNumber"`
 	RefHiveBlockNumber  int             `json:"refHiveBlockNumber"`
@@ -22,6 +30,28 @@ type EngineBlock struct {
 
 type blockChainQueryParams struct {
 	BlockNumber int `json:"blockNumber,omitempty"`
+}
+
+func (h HiveEngineRpcNode) GetStatus() (*EngineStatus, error) {
+	if len(h.Endpoints.Blockchain) == 0 {
+		h.Endpoints.Blockchain = "/blockchain"
+	}
+
+	endpoint := h.Endpoints.Blockchain
+	query := herpcQuery{method: "getStatus"}
+
+	res, err := h.rpcExec(endpoint, query)
+	if err != nil {
+		return nil, err
+	}
+
+	status := &EngineStatus{}
+
+	if err := json.Unmarshal(res, &status); err != nil {
+		return nil, err
+	}
+
+	return status, nil
 }
 
 func (h HiveEngineRpcNode) GetLatestBlockInfo() (*EngineBlock, error) {
