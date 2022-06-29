@@ -2,7 +2,7 @@ module github.com/cfoxon/hiveenginego
 
 go 1.17
 
-require github.com/cfoxon/jrc v0.0.0-20220609203436-a5cdf18dbf58
+require github.com/cfoxon/jrc v0.0.0-20220609213157-eecb83ecebf6
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
