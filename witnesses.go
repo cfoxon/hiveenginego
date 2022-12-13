@@ -21,8 +21,7 @@ type Witness struct {
 	LastRoundVerified  int             `json:"lastRoundVerified"`
 	LastBlockVerified  int             `json:"lastBlockVerified"`
 }
-
-func (h HiveEngineRpcNode) getAllWitnesses() ([]Witness, error) {
+func (h HiveEngineRpcNode) GetAllWitnesses() ([]Witness, error) {
 	if len(h.Endpoints.Contracts) == 0 {
 		h.Endpoints.Contracts = "/contracts"
 	}
