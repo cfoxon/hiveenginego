@@ -8,8 +8,12 @@ type EngineStatus struct {
 	LastBlockNumber             int    `json:"lastBlockNumber"`
 	LastBlockRefHiveBlockNumber int    `json:"lastBlockRefHiveBlockNumber"`
 	LastParsedHiveBlockNumber   int    `json:"lastParsedHiveBlockNumber"`
+	LastVerifiedBlockNumber     int    `json:"lastVerifiedBlockNumber"`
 	SSCnodeVersion              string `json:"SSCnodeVersion"`
 	ChainId                     string `json:"chainId"`
+	Domain			    string `json:"domain"`
+	Lightnode		    bool   `json:"lightnode"`
+	LastHash		    string `json:"lastHash"`
 }
 
 type EngineBlock struct {
