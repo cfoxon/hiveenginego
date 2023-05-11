@@ -33,7 +33,7 @@ type EngineBlock struct {
 }
 
 type blockChainQueryParams struct {
-	BlockNumber int `json:"blockNumber,omitempty"`
+	BlockNumber int `json:"blockNumber"`
 }
 
 func (h HiveEngineRpcNode) GetStatus() (*EngineStatus, error) {
